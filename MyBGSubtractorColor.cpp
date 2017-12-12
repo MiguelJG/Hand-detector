@@ -23,18 +23,18 @@ MyBGSubtractorColor::MyBGSubtractorColor(VideoCapture vc) {
 	upper_bounds = vector<Scalar>(max_samples);
 	means = vector<Scalar>(max_samples);
 	h_low = 0;
-  h_up = 100;
+  h_up = 45;
 	l_low = 0;
 	l_up = 100;
-	s_low = 0;
-	s_up = 80;
-	namedWindow("Trackbars");
+	s_low = 100;
+	s_up = 100;
+	/*namedWindow("Trackbars");
 	createTrackbar("H low:", "Trackbars", &h_low, 100, &MyBGSubtractorColor::Trackbar_func);
 	createTrackbar("H high:", "Trackbars", &h_up, 100, &MyBGSubtractorColor::Trackbar_func);
 	createTrackbar("L low:", "Trackbars", &l_low, 100, &MyBGSubtractorColor::Trackbar_func);
 	createTrackbar("L high:", "Trackbars", &l_up, 100, &MyBGSubtractorColor::Trackbar_func);
 	createTrackbar("S low:", "Trackbars", &s_low, 100, &MyBGSubtractorColor::Trackbar_func);
-	createTrackbar("S high:", "Trackbars", &s_up, 100, &MyBGSubtractorColor::Trackbar_func);
+	createTrackbar("S high:", "Trackbars", &s_up, 100, &MyBGSubtractorColor::Trackbar_func);*/
 }
 
 void MyBGSubtractorColor::Trackbar_func(int, void*)

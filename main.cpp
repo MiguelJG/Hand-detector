@@ -40,6 +40,8 @@ int main(int argc, char** argv)
 
 	namedWindow("Reconocimiento");
 	namedWindow("Fondo");
+	moveWindow("Reconocimiento", 20,20);
+	moveWindow("Fondo", 20000,20);
 
 	MyBGSubtractorColor BGsubtractor(cap);
 	BGsubtractor.LearnModel();

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace cv;
 using namespace std;
@@ -56,42 +57,66 @@ void HandGesture::FeaturesDetection(Mat mask, Mat output_img) {
 	convexityDefects(contours[index], hull, defects);
 		int cont = 0;
 		int numcir = 0;
-		for (int i = 0; i < defects.size(); i++) {
-			Point s = contours[index][defects[i][0]];
-			Point e = contours[index][defects[i][1]];
-			Point f = contours[index][defects[i][2]];
-			float depth = (float)defects[i][3] / 256.0;//se divide la distancia entre 256 para que este entre 0 255
-			double angle = getAngle(s, e, f);
-			if(depth > 50 && angle < 90){
-				circle(output_img,f,5,Scalar(0,255,0),3);
-				numcir++;
-			}
-    }
+		//double area = contourArea(contours,false);
+		double area = contourArea(contoursmax,false);
+		std::ostringstream strs;
+		strs << area;
+		strs << string(" es el area que ocupa la mano");
+		std::string str = strs.str();
 		string Result;          // string which will contain the result
-		switch (numcir) {
-			case 0:
-			 Result = "Tiene 1 o 0 dedos levantados.";
-			break;
-			case 1:
-			Result = "Tiene 2 dedos levantados.";
-			break;
-			case 2:
-			Result = "Tiene 3 dedos levantados.";
-			break;
-			case 3:
-			Result = "Tiene 4 dedos levantados.";
-			break;
-			case 4:
-			Result = "Tiene 5 dedos levantados.";
-			break;
-			default:
-			Result = "No reconocible";
-		}
-		cv::putText(output_img, //target image
-					Result, //text
-					Point(10, output_img.rows / 2), //top-left position
-					FONT_HERSHEY_DUPLEX,
-					1.0,
-					CV_RGB(0, 0, 0), //font color
-					2);
+
+			if(area > 100000){
+				cv::putText(output_img,string("Aleja la mano"),Point(10, output_img.rows / 1.3),FONT_HERSHEY_SIMPLEX,2,CV_RGB(255, 0, 0), 2);
+			}
+			else if( area < 20000){
+				cv::putText(output_img,string("Acerca la mano"),Point(10, output_img.rows / 1.3),FONT_HERSHEY_SIMPLEX,2,CV_RGB(255, 0, 0), 2);
+			}
+			else{
+				for (int i = 0; i < defects.size(); i++) {
+					Point s = contours[index][defects[i][0]];
+					Point e = contours[index][defects[i][1]];
+					Point f = contours[index][defects[i][2]];
+					float depth = (float)defects[i][3] / 256.0;//se divide la distancia entre 256 para que este entre 0 255
+					double angle = getAngle(s, e, f);
+					if(depth > 50 && angle < 90){
+						circle(output_img,f,5,Scalar(0,255,0),3);
+						numcir++;
+					}
+		    }
+				switch (numcir) {
+					case 0:
+					 Result = "Tiene 1 o 0 dedos levantados.";
+					break;
+					case 1:
+					Result = "Tiene 2 dedos levantados.";
+					break;
+					case 2:
+					Result = "Tiene 3 dedos levantados.";
+					break;
+					case 3:
+					Result = "Tiene 4 dedos levantados.";
+					break;
+					case 4:
+					Result = "Tiene 5 dedos levantados.";
+					break;
+					default:
+					Result = "No reconocible";
+				}
+				cv::putText(output_img, //target image
+							Result, //text
+							Point(10, output_img.rows / 1.2), //top-left position
+							FONT_HERSHEY_SIMPLEX,
+							1.0,
+							CV_RGB(0, 255, 4), //font color
+							2);
+				cv::putText(output_img, //target image
+							str, //text
+							Point(10, output_img.rows / 5),
+							FONT_HERSHEY_SIMPLEX,
+							0.5,
+							CV_RGB(0, 0, 0), //font color
+							2);
+					rectangle(output_img, boundingRect(contoursmax).tl(), boundingRect(contoursmax).br(), CV_RGB(0, 85, 255), 2, 8, 0);
+			}
+
 }
